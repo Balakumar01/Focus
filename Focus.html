@@ -157,7 +157,7 @@ dialog h2{font-size:24px}
 .lc input:not([type=checkbox]){width:100%;margin-top:5px;padding:13px 14px;border-radius:14px;border:1px solid #ffffff30;background:#0b0c2066;color:#fff;font-size:16px}
 .pw{position:relative;display:block}.pw button{position:absolute;right:4px;bottom:8px;border:0;background:none;color:#ffd36b;padding:6px 10px;font-size:13px}
 .kl{display:flex;gap:8px;align-items:center}
-.le{color:#ffa3a3;min-height:20px;margin:10px 0 4px;font-size:13px}
+.le{color:#ffa3a3;min-height:20px;margin:10px 0 4px;font-size:13px}.capswarn{display:none;color:#ffd36b;font-size:12.5px;margin:7px 2px 0}.capswarn.show{display:block}.clipbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.clipbar button{font-size:13px;padding:7px 12px}
 .big{width:100%;padding:13px;border-radius:14px;font-size:16px}
 @keyframes flow{50%{background-position:100% 50%}}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -169,7 +169,7 @@ dialog h2{font-size:24px}
 <div class="lg" id="lg"><form id="lf" class="lc">
 <div class="lm" aria-hidden="true"><svg viewBox="0 0 64 64" width="42" height="42"><circle cx="27" cy="38" r="20" fill="none" stroke="#fff" stroke-width="5"/><circle cx="27" cy="38" r="10" fill="none" stroke="#fff" stroke-width="5"/><path d="M27 38L53 12M43 12h10v10" fill="none" stroke="#ffc247" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M42 47l5 5 10-12" fill="none" stroke="#ffc247" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>Welcome back</h2><p class="ls">Sign in to your Focus workspace</p>
 <label>Username<input id="lu" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
-<label>Password<span class="pw"><input id="lp" type="password" autocomplete="current-password" required><button type="button" data-act="eye" aria-label="Show password" title="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label>
+<label>Password<span class="pw"><input id="lp" type="password" autocomplete="current-password" required><button type="button" data-act="eye" aria-label="Show password" title="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label><p id="capswarn" class="capswarn" role="status">⚠ Caps Lock is ON</p>
 <label class="kl"><input type="checkbox" id="lkeep" checked>Keep me signed in on this device</label>
 <p id="le" class="le" role="alert"></p>
 <button class="pri big">Sign in</button></form></div>
@@ -187,7 +187,7 @@ dialog h2{font-size:24px}
 <button id="note" data-act="undo" hidden></button>
 <script>
 const cy=(s,seed=0)=>{let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)};
-const H=5838601680037495,NAME='Bala',AK='focus.auth',K='focus.v2',$=s=>document.querySelector(s),dlg=$('#dlg');
+const H=2634664925985457,NAME='Bala',AK='focus.auth',K='focus.v2',$=s=>document.querySelector(s),dlg=$('#dlg');
 let ok=true,last=null,ce=0,sess=false;
 try{localStorage.setItem('_t','1');localStorage.removeItem('_t');sess=localStorage.getItem(AK)==H}catch(e){ok=false}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -237,7 +237,7 @@ function vHome(){
 
 function vTodo(){
  const tz=today();
- return `<form id="addf" class="addf"><input class="box" name="t" placeholder="Write a to-do, press Enter" autocomplete="off" enterkeyhint="done"><div class="cr" id="cr">${crow()}</div><input class="box" type="date" name="d" aria-label="Date"><button class="pri">Add</button></form>
+ return `<form id="addf" class="addf"><input class="box" name="t" placeholder="Write a to-do, press Enter" autocomplete="off" enterkeyhint="done"><div class="cr" id="cr">${crow()}</div><input class="box" type="date" name="d" aria-label="Date"><button class="pri">Add</button></form><div class="clipbar"><button type="button" data-act="tdcopy">Copy to-dos</button><button type="button" data-act="tdpaste">Paste to-dos</button></div>
  <div class="pad">${S.td.map(x=>`<div class="ln" data-l="td" data-id="${x.id}"><input data-k="t" value="${esc(x.t)}" aria-label="To-do"><label class="cat${x.c?' has':''}" style="--k:${hue(x.c)}"><span>${esc(x.c||'Tag')}</span><select data-k="c" aria-label="Category"><option value="">No tag</option>${S.cats.map(c=>`<option${c==x.c?' selected':''}>${esc(c)}</option>`).join('')}</select></label><label class="dtw${x.d?(x.d<tz?' has late':' has'):''}"><span>${x.d?sh(x.d):'📅'}</span><input type="date" data-k="d" value="${x.d}" aria-label="Date"></label><button data-act="tdel" data-id="${x.id}" aria-label="Remove">×</button></div>`).join('')||'<p class="none">Your page is empty. Write the first line above.</p>'}</div>`
 }
 
@@ -268,7 +268,7 @@ const srow=(x,n)=>`<div class="sr${filled(x)?' f':''}" data-l="sp" data-id="${x.
 
 function vSpend(){
  pad(S);const m=today().slice(0,7);
- return `<div class="sum"><div><small>This month</small><b id="tm">${money(sum(S.sp.filter(x=>(x.d||'').startsWith(m))))}</b></div><div><small>Total</small><b id="ta">${money(sum(S.sp))}</b></div></div>
+ return `<div class="sum"><div><small>This month</small><b id="tm">${money(sum(S.sp.filter(x=>(x.d||'').startsWith(m))))}</b></div><div><small>Total</small><b id="ta">${money(sum(S.sp))}</b></div></div><div class="clipbar"><button type="button" data-act="spcopy">Copy spends</button><button type="button" data-act="sppaste">Paste spends</button></div>
  <div class="sheet" id="sheet"><div class="sh"><span></span><span><b>A</b>Date</span><span><b>B</b>Amount</span><span><b>C</b>Reason</span><span></span></div>${S.sp.map((x,i)=>srow(x,i+1)).join('')}</div>`
 }
 
@@ -285,6 +285,20 @@ function vChart(){
  return `<p class="note"><b>${money(sum(L))}</b> in ${L.length} ${L.length==1?'entry':'entries'}. ${note}</p>`+(B.length?`<div class="plot">${B.map(b=>bar(b,mx)).join('')}</div>`:'<p class="empty">No spends match these slicers.</p>')+sl('m','Month',MN.map((n,i)=>[p2(i+1),n]))+sl('y','Year',ys.map(y=>[y,y]))+sl('r','Reason',Object.entries(rs))
 }
 
+
+async function copyClip(value){
+ const txt=String(value||'');
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(txt)}else{const a=document.createElement('textarea');a.value=txt;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();if(!ok)throw 0}toast('Copied to clipboard')}
+ catch(e){prompt('Copy this text:',txt)}
+}
+async function readClip(){
+ try{if(navigator.clipboard&&window.isSecureContext)return await navigator.clipboard.readText()}catch(e){}
+ return prompt('Paste your text here (one item per line):','')||'';
+}
+const parseSpendPaste=raw=>raw.split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(line=>{
+ const c=line.includes('\t')?line.split('\t'):line.split(',');
+ return {id:uid(),d:(c[0]||'').trim(),a:(c[1]||'').trim().replace(/[₹,\s]/g,''),r:c.slice(2).join(line.includes('\t')?'\t':',').trim()};
+}).filter(x=>x.d||x.a||x.r);
 function menu(){
  dlg.innerHTML=`<div class="menu"><h2>${NAME}</h2><p class="sm">Signed in on this device</p><p class="sm" style="margin-top:14px">Theme</p>
  <div class="chips">${[['auto','Auto'],['light','Light'],['dark','Dark']].map(([k,n])=>`<button class="chip${S.th==k?' on':''}" data-act="th" data-v="${k}">${n}</button>`).join('')}</div>
@@ -320,6 +334,10 @@ document.addEventListener('click',e=>{
  const d=b.dataset;
  if(d.tab){S.tab=d.tab;scrollTo(0,0);render(1);return}
  switch(d.act){
+  case'tdcopy':copyClip(S.td.map(x=>x.t||'').join('\\n'));return;
+  case'tdpaste':(async()=>{const raw=await readClip();const lines=raw.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;[...lines].reverse().forEach(t=>S.td.unshift({id:uid(),t,d:'',c:S.cur}));render();toast(lines.length+' to-do(s) pasted')})();return;
+  case'spcopy':copyClip(S.sp.filter(filled).map(x=>[x.d||'',x.a||'',x.r||''].join('\\t')).join('\\n'));return;
+  case'sppaste':(async()=>{const raw=await readClip();const rows=parseSpendPaste(raw);if(!rows.length){toast('No spend rows found');return}S.sp=S.sp.filter(filled);S.sp.unshift(...rows.reverse());pad(S);render();toast(rows.length+' spend row(s) pasted')})();return;
   case'eye':{const p=$('#lp'),show=p.type==='password';p.type=show?'text':'password';b.setAttribute('aria-label',show?'Hide password':'Show password');b.title=show?'Hide password':'Show password';b.innerHTML=show?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 002.8 2.8"/><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a15.7 15.7 0 01-4 4.7"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1.3 0 2.5-.3 3.5-.8"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';return}
   case'tdel':case'sdel':{const l=d.act=='tdel'?'td':'sp',i=S[l].findIndex(x=>x.id==d.id);last={l,i,x:S[l].splice(i,1)[0]};toast('Removed. Tap to undo');break}
   case'undo':if(last){S[last.l].splice(last.i,0,last.x);last=null;$('#note').hidden=true}break;
@@ -399,6 +417,9 @@ document.addEventListener('change',e=>{
  if(r&&r.dataset.l=='td'&&(t.dataset.k=='d'||t.dataset.k=='c'))render();
 });
 
+const lp=$('#lp'),caps=$('#capswarn');
+const updateCaps=e=>{if(caps)caps.classList.toggle('show',!!(e&&e.getModifierState&&e.getModifierState('CapsLock')))};
+if(lp){lp.addEventListener('keydown',updateCaps);lp.addEventListener('keyup',updateCaps);lp.addEventListener('blur',()=>caps&&caps.classList.remove('show'))}
 theme();
 if(sess)unlock(1);else lock();
 </script>
